@@ -34,11 +34,11 @@ const Login = () => {
     } catch (error) {
       // response or originalStatus
 
-      if (!err?.response) {
+      if (!err?.originalStatus) {
         setErrMsg("no server response");
-      } else if (err.response?.status === 400) {
+      } else if (err.originalStatus?.status === 400) {
         setErrMsg("Missing username or password");
-      } else if (err.response?.status === 401) {
+      } else if (err.originalStatus?.status === 401) {
         setErrMsg("Unauthorized");
       } else {
         setErrMsg("Login failed");
@@ -50,7 +50,49 @@ const Login = () => {
   const handleUserInput = (e) => setUser(e.target.value);
   const handlePwdInput = (e) => setPwd(e.target.value);
 
-  return <div>Login</div>;
+  const content = isLoading ? (
+    <h1>Loading...</h1>
+  ) : (
+    <section className="login">
+      <p
+        ref={errRef}
+        className={errMsg ? "errMsg" : "offscreen"}
+        aria-live="assertive"
+      >
+        {errMsg}
+      </p>
+
+      <h1>Employee Login</h1>
+
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="username">Username: </label>
+
+        <input
+          type="text"
+          id="username"
+          ref={useRef}
+          value={user}
+          onChange={handleUserInput}
+          autoComplete="off"
+          required
+        />
+
+        <label htmlFor="password">Password: </label>
+
+        <input
+          type="password"
+          id="password"
+          onChange={handlePwdInput}
+          value={pwd}
+          required
+        />
+
+        <button>Sign in</button>
+      </form>
+    </section>
+  );
+
+  return content;
 };
 
 export default Login;
